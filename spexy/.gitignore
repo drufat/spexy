@@ -1,0 +1,6 @@
+__pycache__
+*.so
+*.png
+*.hdf5
+*.mp4
+*.py.txt

@@ -2,12 +2,12 @@
 import glob, os
 
 import numpy
+import pybindcpp
 from setuptools import setup, Extension
 
 include_dirs = [
     'src',
-    '../pybindcpp/include',
-    '../pybind11/include',
+    pybindcpp.get_include(),
     numpy.get_include(),
 ]
 
@@ -32,13 +32,13 @@ if ('CC' in os.environ) and ('gcc' in os.environ['CC'] or 'g++' in os.environ['C
 ext_modules = [
 
     Extension(
-        'dec.ops.nat',
+        'spexy.ops.nat',
         sources=[
-            'dec/ops/nat.cpp',
-            'src/dec/ops/ops.cpp',
+            'spexy/ops/nat.cpp',
+            'src/ops/ops.cpp',
         ],
         depends=depends + [
-            'src/dec/ops/ops.h',
+            'src/ops/ops.h',
         ],
         include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
@@ -47,13 +47,13 @@ ext_modules = [
     ),
 
     Extension(
-        'dec.bases.circular.nat',
+        'spexy.bases.circular.nat',
         sources=[
-            'dec/bases/circular/nat.cpp',
-            'src/dec/bases/circular.cpp',
+            'spexy/bases/circular/nat.cpp',
+            'src/bases/circular.cpp',
         ],
         depends=[
-                    'src/dec/bases/circular.h',
+                    'src/bases/circular.h',
                 ] + depends,
         include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
@@ -62,13 +62,13 @@ ext_modules = [
     ),
 
     Extension(
-        'dec.bases.cardinals.nat',
+        'spexy.bases.cardinals.nat',
         sources=[
-            'dec/bases/cardinals/nat.cpp',
-            'src/dec/bases/cardinals.cpp',
+            'spexy/bases/cardinals/nat.cpp',
+            'src/bases/cardinals.cpp',
         ],
         depends=[
-                    'src/dec/bases/cardinals.h',
+                    'src/bases/cardinals.h',
                 ] + depends,
         include_dirs=include_dirs,
         extra_compile_args=extra_compile_args,
@@ -82,12 +82,14 @@ setup(
     name='spexy',
     packages=['spexy'],
     package_dir={'spexy': 'spexy'},
-    version='0.0',
+    package_data={'spexy': ['spexy/data/memoize/*.json']},
+    ext_modules=ext_modules,
+    version='0.2',
     description='Spectral Exterior Calculus',
     author='Dzhelil Rufat',
-    author_email='drufat@fastmail.com',
+    author_email='drufat@caltech.edu',
     license='GNU GPLv3',
-    url='http://github.com/drufat/spexy.git',
+    url='http://dzhelil.info/spexy',
     requires=[
         'numpy',
         'sympy',
