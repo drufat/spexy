@@ -8,6 +8,8 @@ addons:
     packages: &common_packages
       - gcc-6
       - g++-6
+      - libeigen3-dev
+      - libfftw3-dev
     sources: &sources
       - ubuntu-toolchain-r-test
 
