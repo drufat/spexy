@@ -1,7 +1,7 @@
 # Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
+from glumpy import app
 from importlib.machinery import SourceFileLoader
 
-from glumpy import app
 from glumpy.app.movie import record
 
 
@@ -22,13 +22,3 @@ def anim(source, dest):
         glumpyanim(module, dest)
     if hasattr(module, 'anim'):
         matplotanim(module, dest)
-
-
-cmds = [anim, ]
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

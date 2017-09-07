@@ -47,25 +47,6 @@ def task_vectorfields():
         yield mk(lic, src, src.with_suffix('.lic.png'))
 
 
-def task_morphism():
-    from spexy.command.morphism import plots, movies, gen
-
-    dir = 'spexy/morphism/maps'
-    out = 'spexy/maps'
-    target_plots = plots()
-    target_movies = movies()
-
-    for source in Path(dir).glob('*.py'):
-        if source.name in ['__init__.py', 'common.py']:
-            continue
-        for trgt in chain(
-                target_plots,
-                target_movies
-        ):
-            target = f'{out}/{source.stem}/{trgt}'
-            yield mk(gen, source, target)
-
-
 def task_converge():
     from spexy.command.converge import sim_save, plt_save
 

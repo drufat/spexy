@@ -14,8 +14,8 @@ from spexy.opengl.surface import surface
 from spexy.sim.metric import bases_sqrt
 from spexy.sim.save import save
 
-Const0 = namedtuple('Const1', ['verts'])
-Var0 = namedtuple('Var1', ['x', 'y', 'v'])
+Const0 = namedtuple('Const0', ['verts'])
+Var0 = namedtuple('Var0', ['x', 'y', 'v'])
 
 
 @save(Const0, Var0)

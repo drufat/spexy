@@ -5,7 +5,6 @@ Convert files written in LyX or Latex to Restructured Text.
 import os
 import re
 import subprocess
-import sys
 import tempfile
 
 sample_tex = r'''
@@ -221,13 +220,3 @@ def process(fname):
         pass  # Do nothing
     else:
         raise Exception('Unrecognized extension {} for file {}'.format(ext, fname))
-
-
-cmds = [process]
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

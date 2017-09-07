@@ -35,13 +35,3 @@ def nbconvert(fromfile, tofile, to='notebook', execute=False):
 
     with open(tofile, 'w') as fout:
         fout.write(sout.decode())
-
-
-cmds = [removetext, nbconvert]
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

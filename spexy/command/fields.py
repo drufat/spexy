@@ -27,13 +27,3 @@ def fields(source, dest):
     plt.axis('equal')
     plt.axis('off')
     plt.savefig(dest)
-
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands([
-        fields,
-    ])
-    parser.dispatch()

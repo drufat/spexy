@@ -40,13 +40,3 @@ def tex(source, dest):
 
     srcmod.gentex(gentex)
     subprocess.run(['touch', dest])
-
-
-cmds = [removepreamble, removebib, tex]
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

@@ -1,5 +1,4 @@
 # Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
-from importlib import import_module
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,13 +47,3 @@ def lic(source, dest):
     from licpy.lic import runlic
     tex = runlic(vx, vy, L)
     grey_save(str(dest), tex)
-
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands([
-        arr, lic,
-    ])
-    parser.dispatch()

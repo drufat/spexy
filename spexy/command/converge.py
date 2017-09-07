@@ -1,6 +1,6 @@
-from importlib.machinery import SourceFileLoader
-import os
 import glob
+import os
+from importlib.machinery import SourceFileLoader
 
 
 def sim_save(source, dest):
@@ -53,13 +53,3 @@ def gen_makefile():
 
                 ).format(root=root, fig=fig)
             )
-
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands([
-        sim_save, plt_save, gen_makefile,
-    ])
-    parser.dispatch()

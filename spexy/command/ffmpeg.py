@@ -11,12 +11,3 @@ def snapshot(source, dest, frame):
         '-i', source,
         '-vframes', '1', dest
     ])
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands([
-        snapshot,
-    ])
-    parser.dispatch()

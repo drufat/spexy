@@ -1,12 +1,11 @@
 # Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
 import os
-from functools import wraps
 
 import matplotlib.pyplot as plt
 import sympy as sy
 
-import spexy.morphism.maps
 import spexy.matplot
+import spexy.morphism.maps
 import spexy.morphism.plot as mplt
 import spexy.morphism.plt_anim
 
@@ -185,16 +184,3 @@ def gen(source, dest):
         TXT[t](mapping, dest)
     else:
         raise ValueError
-
-
-cmds = [
-    plots, movies,
-    gen,
-]
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

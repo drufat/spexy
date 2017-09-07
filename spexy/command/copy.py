@@ -15,13 +15,3 @@ def insert(notice, *args):
             continue
         with open(filename, 'w') as f:
             f.write(''.join(preamble + [line] + lines))
-
-
-cmds = [insert]
-
-if __name__ == '__main__':
-    from argh import ArghParser
-
-    parser = ArghParser()
-    parser.add_commands(cmds)
-    parser.dispatch()

@@ -1,6 +1,5 @@
 # Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
 import os
-import subprocess
 from importlib.machinery import SourceFileLoader
 
 import matplotlib.pyplot as plt
@@ -20,13 +19,3 @@ def img(source, dest):
         plt.savefig('{}/{}.pdf'.format(dest, i))
 
     plt.close('all')
-
-
-if __name__ == '__main__':
-    import argh
-
-    parser = argh.ArghParser()
-    parser.add_commands([
-        img,
-    ])
-    parser.dispatch()
