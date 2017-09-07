@@ -93,6 +93,8 @@ setup(
     requires=[
         'numpy',
         'sympy',
+        'scipy',
         'pybindcpp',
+        'matplotlib',
     ],
 )

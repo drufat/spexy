@@ -1,3 +1,6 @@
 numpy
+sympy
+scipy
 pybindcpp
+matplotlib
 
