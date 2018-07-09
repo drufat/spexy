@@ -51,7 +51,8 @@ def latex2rst_(source):
        e^{i\pi} + 1 = 0
        \label{eq:euler}
     <BLANKLINE>
-    and we can refer back to the Euler Identity as Eq. [eq:euler].
+    and we can refer back to the Euler Identity as Eq.
+    `[eq:euler] <#eq:euler>`__.
     <BLANKLINE>
     '''
     return pandoc(source, 'latex', 'rst')
@@ -68,7 +69,8 @@ def latex2rst(source):
     <BLANKLINE>
        :label: euler
     <BLANKLINE>
-    and we can refer back to the Euler Identity as Eq.  :eq:`euler` .
+    and we can refer back to the Euler Identity as Eq.
+    ` :eq:`euler`  <#eq:euler>`__.
     <BLANKLINE>
     '''
     source = fix_tabularnewline(source)
