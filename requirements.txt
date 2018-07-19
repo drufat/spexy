@@ -6,4 +6,6 @@ h5py
 matplotlib
 licpy
 glumpy
+pyopengl
+
 
