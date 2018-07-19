@@ -2,13 +2,14 @@
 import glob, os
 
 import numpy
-import pybindcpp
+import pybind11
 from setuptools import setup, Extension
 
 include_dirs = [
     'src',
-    pybindcpp.get_include(),
     numpy.get_include(),
+    pybind11.get_include(True),
+    pybind11.get_include(False),
 ]
 
 headers = glob.glob(
@@ -32,9 +33,9 @@ if ('CC' in os.environ) and ('gcc' in os.environ['CC'] or 'g++' in os.environ['C
 ext_modules = [
 
     Extension(
-        'spexy.ops.nat',
+        'spexy.ops.nat_raw',
         sources=[
-            'spexy/ops/nat.cpp',
+            'spexy/ops/nat_raw.cpp',
             'src/ops/ops.cpp',
         ],
         depends=depends + [
@@ -87,14 +88,14 @@ setup(
     version='0.2',
     description='Spectral Exterior Calculus',
     author='Dzhelil Rufat',
-    author_email='drufat@caltech.edu',
+    author_email='drufat@fastmail.com',
     license='GNU GPLv3',
     url='http://dzhelil.info/spexy',
     requires=[
         'numpy',
         'sympy',
         'scipy',
-        'pybindcpp',
+        'pybind11',
         'matplotlib',
     ],
 )

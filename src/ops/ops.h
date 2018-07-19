@@ -16,43 +16,31 @@
 */
 
 // positive modulo
-inline auto
-mod(int k, int n)
-{
-  return (k % n + n) % n;
-}
+inline auto mod(int k, int n) { return (k % n + n) % n; }
 
 template <class T>
-auto
-diff(int Nin, const T* in, int Nout, T* out)
-{
+auto diff(int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nout; i++) {
     out[i] = in[i + 1] - in[i];
   }
 }
 
 template <class T>
-auto
-roll(int n, int Nin, const T* in, int Nout, T* out)
-{
+auto roll(int n, int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nin; i++) {
     out[mod(i + n, Nout)] = in[i];
   }
 }
 
 template <class T>
-auto
-slice_(int begin, int step, int Nin, const T* in, int Nout, T* out)
-{
+auto slice_(int begin, int step, int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nout; i++) {
     out[i] = in[begin + i * step];
   }
 }
 
 template <class T>
-void
-weave(int N0, const T* in0, int N1, const T* in1, int N, T* out)
-{
+void weave(int N0, const T* in0, int N1, const T* in1, int N, T* out) {
   for (int i = 0; i < N0; i++) {
     out[2 * i] = in0[i];
   }
@@ -62,9 +50,7 @@ weave(int N0, const T* in0, int N1, const T* in1, int N, T* out)
 }
 
 template <class T>
-void
-concat(int N0, const T* in0, int N1, const T* in1, int N, T* out)
-{
+void concat(int N0, const T* in0, int N1, const T* in1, int N, T* out) {
   for (int i = 0; i < N0; i++) {
     out[i] = in0[i];
   }
@@ -80,7 +66,7 @@ concat(int N0, const T* in0, int N1, const T* in1, int N, T* out)
 */
 
 std::function<void(int, int, const double*, double*)> fourier(
-  void (*F)(int, const std::complex<double>*, std::complex<double>*));
+    void (*F)(int, const std::complex<double>*, std::complex<double>*));
 
 /*
 ################
@@ -134,4 +120,4 @@ void Sinv(int N, const std::complex<double>* X, std::complex<double>* Y);
 
 void G(int N, const std::complex<double>* X, std::complex<double>* Y);
 
-#endif // DECOPS
+#endif  // DECOPS

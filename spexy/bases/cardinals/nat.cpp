@@ -1,66 +1,55 @@
-// Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
+// Copyright (C) 2010-2018 Dzhelil S. Rufat. All Rights Reserved.
 #include <bases/cardinals.h>
-#include <pybindcpp/module.h>
-#include <pybindcpp/numpy.h>
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
 
-using namespace pybindcpp;
+namespace py = pybind11;
 
-void
-cardinalsnative(ExtModule& m)
-{
-  m.var("half", half);
-  m.var("pi", pi);
+#define vectorize(name) m.def(#name, py::vectorize(name))
 
-  m.fun("S", [](PyObject* o) -> PyObject* {
-    Py_IncRef(o);
-    return o;
-  });
+PYBIND11_MODULE(nat, m) {
+  m.attr("half") = py::float_(half);
+  m.attr("pi") = py::float_(pi);
 
-  ufunc(m, "T", T);
-  ufunc(m, "U", U);
-  ufunc(m, "Uclamp", Uclamp);
-  ufunc(m, "Tclamp", Tclamp);
+  m.def("S", [](py::object o) -> py::object { return o; });
 
-  ufunc(m, "dT", dT);
-  ufunc(m, "dU", dU);
-  ufunc(m, "dUclamp", dUclamp);
-  ufunc(m, "dTclamp", dTclamp);
+  vectorize(T);
+  vectorize(U);
+  vectorize(Uclamp);
+  vectorize(Tclamp);
 
-  ufunc(m, "ddT", ddT);
-  ufunc(m, "ddU", ddU);
-  ufunc(m, "ddUclamp", ddUclamp);
-  ufunc(m, "ddTclamp", ddTclamp);
+  vectorize(dT);
+  vectorize(dU);
+  vectorize(dUclamp);
+  vectorize(dTclamp);
 
-  ufunc(m, "xT", xT);
-  ufunc(m, "xU", xU);
-  ufunc(m, "xUclamp", xUclamp);
-  ufunc(m, "xTclamp", xTclamp);
+  vectorize(ddT);
+  vectorize(ddU);
+  vectorize(ddUclamp);
+  vectorize(ddTclamp);
 
-  ufunc(m, "CT", CT);
-  ufunc(m, "CU", CU);
-  ufunc(m, "CUclamp", CUclamp);
-  ufunc(m, "CTclamp", CTclamp);
+  vectorize(xT);
+  vectorize(xU);
+  vectorize(xUclamp);
+  vectorize(xTclamp);
 
-  ufunc(m, "dCT", dCT);
-  ufunc(m, "dCU", dCU);
-  ufunc(m, "dCUclamp", dCUclamp);
-  ufunc(m, "dCTclamp", dCTclamp);
+  vectorize(CT);
+  vectorize(CU);
+  vectorize(CUclamp);
+  vectorize(CTclamp);
 
-  ufunc(m, "DT", DT);
-  ufunc(m, "DU", DU);
-  ufunc(m, "DUclamp", DUclamp);
-  ufunc(m, "DTclamp", DTclamp);
+  vectorize(dCT);
+  vectorize(dCU);
+  vectorize(dCUclamp);
+  vectorize(dCTclamp);
 
-  ufunc(m, "DnT", DnT);
-  ufunc(m, "DnU", DnU);
-  ufunc(m, "DnUclamp", DnUclamp);
-  ufunc(m, "DnTclamp", DnTclamp);
-}
+  vectorize(DT);
+  vectorize(DU);
+  vectorize(DUclamp);
+  vectorize(DTclamp);
 
-PyMODINIT_FUNC
-PyInit_nat(void)
-{
-  import_array();
-  import_ufunc();
-  return module_init("nat", cardinalsnative);
+  vectorize(DnT);
+  vectorize(DnU);
+  vectorize(DnUclamp);
+  vectorize(DnTclamp);
 }

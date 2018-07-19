@@ -1,9 +1,10 @@
 # Copyright (C) 2010-2016 Dzhelil S. Rufat. All Rights Reserved.
 import numpy as np
+import spexy.ops.nat_raw as nr
 
 
 def c(f):
-    return np.ctypeslib.as_ctypes(f.ravel())
+    return np.ascontiguousarray(f, dtype='double')
 
 
 def dims(f):
@@ -13,9 +14,11 @@ def dims(f):
     }[f.ndim]()
 
 
-def wrap_op(H):
+freq = nr.freq
+
+
+def wrap_op(func):
     """
-    >>> from spexy.ops.nat import H, Hinv
     >>> f = np.ones(5)/np.pi
     >>> H(f)
     array([ 0.4,  0.4,  0.4,  0.4,  0.4])
@@ -36,23 +39,31 @@ def wrap_op(H):
     """
 
     def _(f):
-        f = np.ascontiguousarray(f, dtype='double')
+        f = c(f)
         M, N = dims(f)
         out = np.empty_like(f)
-        H(M, N, c(f), c(out))
+        func(M, N, f, out)
         return out
 
     return _
 
 
-def wrap_diff(imp):
+[
+    H, Hinv,
+    S, Sinv,
+    Q, Qinv,
+    G,
+] = [wrap_op(F) for F in [
+    nr.H, nr.Hinv,
+    nr.S, nr.Sinv,
+    nr.Q, nr.Qinv,
+    nr.G,
+]]
+
+
+def diff():
     """
     >>> from spexy.ops.num import mat
-    >>> from spexy.ops.nat import diff
-    >>> mat(diff(), 4)
-    array([[-1.,  1.,  0.,  0.],
-           [ 0., -1.,  1.,  0.],
-           [ 0.,  0., -1.,  1.]])
     >>> f = np.arange(9, dtype='double').reshape(3, 3)
     >>> diff()(f)
     array([[ 1.,  1.],
@@ -61,32 +72,32 @@ def wrap_diff(imp):
     >>> diff()(f.T).T
     array([[ 3.,  3.,  3.],
            [ 3.,  3.,  3.]])
+    >>> mat(diff(), 4)
+    array([[-1.,  1.,  0.,  0.],
+           [ 0., -1.,  1.,  0.],
+           [ 0.,  0., -1.,  1.]])
     """
 
-    def diff():
-        def _(f):
-            f = np.ascontiguousarray(f, dtype='double')
-            M, N = dims(f)
-            Nout = N - 1
-            shape = list(f.shape)
-            shape[-1] = Nout
-            out = np.empty(shape, dtype='double')
-            imp(
-                M,
-                N, c(f),
-                Nout, c(out),
-            )
-            return out
+    def _(f):
+        f = c(f)
+        M, N = dims(f)
+        Nout = N - 1
+        shape = list(f.shape)
+        shape[-1] = Nout
+        out = np.empty(shape, dtype=f.dtype)
+        nr.diff(
+            M,
+            N, f,
+            Nout, out,
+        )
+        return out
 
-        return _
-
-    return diff
+    return _
 
 
-def wrap_roll(imp):
+def roll(n):
     """
     >>> from spexy.ops.num import mat
-    >>> from spexy.ops.nat import roll
     >>> mat(roll(1), 4)
     array([[ 0.,  0.,  0.,  1.],
            [ 1.,  0.,  0.,  0.],
@@ -108,22 +119,19 @@ def wrap_roll(imp):
            [ 3.,  4.,  5.]])
     """
 
-    def roll(n):
-        def _(f):
-            f = np.ascontiguousarray(f, dtype='double')
-            M, N = dims(f)
-            out = np.empty_like(f)
-            imp(
-                n,
-                M,
-                N, c(f),
-                N, c(out),
-            )
-            return out
+    def _(f):
+        f = c(f)
+        M, N = dims(f)
+        out = np.empty_like(f)
+        nr.roll(
+            n,
+            M,
+            N, f,
+            N, out,
+        )
+        return out
 
-        return _
-
-    return roll
+    return _
 
 
 def clamp(v, N):
@@ -200,10 +208,9 @@ def outsize(N, begin, end, step):
         return Nout, begin, end, step
 
 
-def wrap_slice_(imp):
+def slice_(begin_, end_, step_):
     """
     >>> from spexy.ops.num import mat
-    >>> from spexy.ops.nat import slice_
     >>> mat(slice_(0, None, 2), 6)
     array([[ 1.,  0.,  0.,  0.,  0.,  0.],
            [ 0.,  0.,  1.,  0.,  0.,  0.],
@@ -226,30 +233,26 @@ def wrap_slice_(imp):
            [ 1.,  0.,  0.,  0.,  0.,  0.]])
     """
 
-    def slice_(begin_, end_, step_):
-        def _(f):
-            f = np.ascontiguousarray(f, dtype='double')
-            M, N = dims(f)
-            Nout, begin, _, step = outsize(N, begin_, end_, step_)
-            shape = list(f.shape)
-            shape[-1] = Nout
-            out = np.empty(shape, dtype='double')
-            imp(
-                begin, step,
-                M,
-                N, c(f),
-                Nout, c(out),
-            )
-            return out
+    def _(f):
+        f = c(f)
+        M, N = dims(f)
+        Nout, begin, _, step = outsize(N, begin_, end_, step_)
+        shape = list(f.shape)
+        shape[-1] = Nout
+        out = np.empty(shape, dtype=f.dtype)
+        nr.slice_(
+            begin, step,
+            M,
+            N, f,
+            Nout, out,
+        )
+        return out
 
-        return _
-
-    return slice_
+    return _
 
 
-def wrap_weave(imp):
+def weave(in0, in1):
     """ Interweave two arrays.
-    >>> from spexy.ops.nat import weave
     >>> weave([0, 1, 2], [3, 4, 5])
     array([ 0.,  3.,  1.,  4.,  2.,  5.])
     >>> weave([0, 1, 2], [3, 4])
@@ -259,30 +262,26 @@ def wrap_weave(imp):
            [ 2.,  6.,  3.,  7.]])
     """
 
-    def weave(in0, in1):
-        in0 = np.ascontiguousarray(in0, dtype='double')
-        in1 = np.ascontiguousarray(in1, dtype='double')
-        M, Nin0 = dims(in0)
-        _, Nin1 = dims(in1)
-        assert (M == _)
-        Nout = Nin0 + Nin1
-        shape = list(in0.shape)
-        shape[-1] = Nout
-        out = np.empty(shape, dtype='double')
-        imp(
-            M,
-            Nin0, c(in0),
-            Nin1, c(in1),
-            Nout, c(out)
-        )
-        return out
-
-    return weave
+    in0 = c(in0)
+    in1 = c(in1)
+    M, Nin0 = dims(in0)
+    _, Nin1 = dims(in1)
+    assert (M == _)
+    Nout = Nin0 + Nin1
+    shape = list(in0.shape)
+    shape[-1] = Nout
+    out = np.empty(shape, dtype=in0.dtype)
+    nr.weave(
+        M,
+        Nin0, in0,
+        Nin1, in1,
+        Nout, out,
+    )
+    return out
 
 
-def wrap_concat(imp):
-    """ Interweave two arrays.
-    >>> from spexy.ops.nat import concat
+def concat(in0, in1):
+    """ Concatenate two arrays.
     >>> concat([0, 1, 2], [3, 4, 5])
     array([ 0.,  1.,  2.,  3.,  4.,  5.])
     >>> concat([[0,1],[2,3]],[[4],[5]])
@@ -290,22 +289,19 @@ def wrap_concat(imp):
            [ 2.,  3.,  5.]])
    """
 
-    def concat(in0, in1):
-        in0 = np.ascontiguousarray(in0, dtype='double')
-        in1 = np.ascontiguousarray(in1, dtype='double')
-        M, Nin0 = dims(in0)
-        _, Nin1 = dims(in1)
-        assert (M == _)
-        Nout = Nin0 + Nin1
-        shape = list(in0.shape)
-        shape[-1] = Nout
-        out = np.empty(shape, dtype='double')
-        imp(
-            M,
-            Nin0, c(in0),
-            Nin1, c(in1),
-            Nout, c(out)
-        )
-        return out
-
-    return concat
+    in0 = c(in0)
+    in1 = c(in1)
+    M, Nin0 = dims(in0)
+    _, Nin1 = dims(in1)
+    assert (M == _)
+    Nout = Nin0 + Nin1
+    shape = list(in0.shape)
+    shape[-1] = Nout
+    out = np.empty(shape, dtype=in0.dtype)
+    nr.concat(
+        M,
+        Nin0, in0,
+        Nin1, in1,
+        Nout, out,
+    )
+    return out

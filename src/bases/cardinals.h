@@ -67,12 +67,9 @@ double xTclamp(long N, double n);
 */
 
 template <decltype(T) P, decltype(dT) dP, decltype(xT) xP>
-double
-C(long N, long n, double x)
-{
+double C(long N, long n, double x) {
   auto xn = xP(N, n);
-  if (Eq(x, xn))
-    return 1.0;
+  if (Eq(x, xn)) return 1.0;
   return P(N, x) / (x - xn) / dP(N, xn);
 }
 
@@ -88,12 +85,9 @@ C(long N, long n, double x)
 */
 
 template <decltype(T) P, decltype(dT) dP, decltype(ddT) ddP, decltype(xT) xP>
-double
-dC(long N, long n, double x)
-{
+double dC(long N, long n, double x) {
   auto xn = xP(N, n);
-  if (Eq(x, xn))
-    return ddP(N, xn) / 2 / dP(N, xn);
+  if (Eq(x, xn)) return ddP(N, xn) / 2 / dP(N, xn);
   return (dP(N, x) * (x - xn) - P(N, x)) / pow(x - xn, 2) / dP(N, xn);
 }
 
@@ -109,12 +103,9 @@ dC(long N, long n, double x)
 */
 
 template <decltype(dC<T, dT, ddT, xT>) dCP>
-double
-D(long N, long m, double x)
-{
+double D(long N, long m, double x) {
   auto sum = 0.0;
-  for (long n = 0; n < m + 1; n++)
-    sum += dCP(N, n, x);
+  for (long n = 0; n < m + 1; n++) sum += dCP(N, n, x);
   return -sum;
 }
 
@@ -130,9 +121,7 @@ D(long N, long m, double x)
 */
 
 template <decltype(D<dC<T, dT, ddT, xT>>) DP, decltype(xT) xP>
-double
-Dn(long N, long n, double x)
-{
+double Dn(long N, long n, double x) {
   return DP(N, n, x) * (xP(N, n + 1) - xP(N, n));
 }
 

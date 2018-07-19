@@ -121,4 +121,4 @@ double psi_grad(long N, double n, double x);
 
 double psi_star(long N, double n, double x);
 
-#endif // BASESNATIVE
+#endif  // BASESNATIVE
