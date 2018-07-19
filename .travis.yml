@@ -1,24 +1,17 @@
+sudo: enabled
 language: python
 python:
     - "3.4"
     - "3.6"
-    
-addons:
-  apt:
-    packages: &common_packages
-      - gcc-6
-      - g++-6
-      - libeigen3-dev
-      - libfftw3-dev
-    sources: &sources
-      - ubuntu-toolchain-r-test
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y libeigen3-dev libfftw3-dev
 
 install:
-    - export CC=gcc-6
-    - export CXX=g++-6
-    - pip install -r requirements.txt
+    - pip install --upgrade -r requirements.txt
     - python setup.py develop
 
 script:
-    - py.test --doctest-modules spexy
+    - py.test --doctest-modules --disable-warnings spexy
 
