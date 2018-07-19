@@ -1,6 +1,6 @@
 numpy
 sympy
 scipy
-pybindcpp
+pybind11
 matplotlib
 
