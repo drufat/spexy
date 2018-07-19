@@ -21,7 +21,7 @@ depends = [
           ] + headers
 
 extra_compile_args = [
-    '-std=c++14',
+    '-std=c++11',
 ]
 
 libraries = []

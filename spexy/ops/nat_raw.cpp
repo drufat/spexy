@@ -10,8 +10,9 @@ namespace py = pybind11;
 
 using arr_t = py::array_t<double, py::array::c_style | py::array::forcecast>;
 using op_t = decltype(H);
+using func_t = std::function<void(int, int, arr_t, arr_t)>;
 
-auto wrap_op(op_t F) {
+func_t wrap_op(op_t F) {
   auto FF = fourier(F);
   auto func = [=](int M, int N, arr_t f, arr_t fout) {
     FF(M, N, f.data(), fout.mutable_data());
@@ -19,7 +20,7 @@ auto wrap_op(op_t F) {
   return func;
 }
 
-auto wrap_diff(int M, int Nin, arr_t f, int Nout, arr_t fout) {
+void wrap_diff(int M, int Nin, arr_t f, int Nout, arr_t fout) {
   auto in = f.data();
   auto out = fout.mutable_data();
   PARALLEL
@@ -30,7 +31,7 @@ auto wrap_diff(int M, int Nin, arr_t f, int Nout, arr_t fout) {
     );
 }
 
-auto wrap_roll(int n, int M, int Nin, arr_t f, int Nout, arr_t fout) {
+void wrap_roll(int n, int M, int Nin, arr_t f, int Nout, arr_t fout) {
   auto in = f.data();
   auto out = fout.mutable_data();
   PARALLEL
@@ -42,7 +43,7 @@ auto wrap_roll(int n, int M, int Nin, arr_t f, int Nout, arr_t fout) {
     );
 }
 
-auto wrap_slice_(int begin, int step, int M, int Nin, arr_t f, int Nout,
+void wrap_slice_(int begin, int step, int M, int Nin, arr_t f, int Nout,
                  arr_t fout) {
   auto in = f.data();
   auto out = fout.mutable_data();
@@ -55,7 +56,7 @@ auto wrap_slice_(int begin, int step, int M, int Nin, arr_t f, int Nout,
     );
 }
 
-auto wrap_weave(int M, int Nin0, arr_t fin0, int Nin1, arr_t fin1, int Nout,
+void wrap_weave(int M, int Nin0, arr_t fin0, int Nin1, arr_t fin1, int Nout,
                 arr_t fout) {
   auto in0 = fin0.data();
   auto in1 = fin1.data();
@@ -70,7 +71,7 @@ auto wrap_weave(int M, int Nin0, arr_t fin0, int Nin1, arr_t fin1, int Nout,
     );
 }
 
-auto wrap_concat(int M, int Nin0, arr_t fin0, int Nin1, arr_t fin1, int Nout,
+void wrap_concat(int M, int Nin0, arr_t fin0, int Nin1, arr_t fin1, int Nout,
                  arr_t fout) {
   auto in0 = fin0.data();
   auto in1 = fin1.data();

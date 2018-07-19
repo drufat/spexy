@@ -16,24 +16,24 @@
 */
 
 // positive modulo
-inline auto mod(int k, int n) { return (k % n + n) % n; }
+inline int mod(int k, int n) { return (k % n + n) % n; }
 
 template <class T>
-auto diff(int Nin, const T* in, int Nout, T* out) {
+void diff(int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nout; i++) {
     out[i] = in[i + 1] - in[i];
   }
 }
 
 template <class T>
-auto roll(int n, int Nin, const T* in, int Nout, T* out) {
+void roll(int n, int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nin; i++) {
     out[mod(i + n, Nout)] = in[i];
   }
 }
 
 template <class T>
-auto slice_(int begin, int step, int Nin, const T* in, int Nout, T* out) {
+void slice_(int begin, int step, int Nin, const T* in, int Nout, T* out) {
   for (int i = 0; i < Nout; i++) {
     out[i] = in[begin + i * step];
   }

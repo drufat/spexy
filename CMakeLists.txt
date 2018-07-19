@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(spexy)
 
 add_compile_options(
-        -std=c++14
+        -std=c++11
         -Wall
 )
 
